@@ -1,0 +1,1895 @@
+"sketch ID","title","code title","code"
+"2806873","perfect book","mySketch.js","
+function preload(){
+
+}
+
+function setup() {
+
+	// we don't need animation
+	noLoop();
+	// We won't need a canvas either!
+	noCanvas();
+	
+	// set the book's title using createElement(), https://p5js.org/reference/p5/createElement/
+	createElement(""h1"",""You do not need to be Perfect."");
+	
+	// to make a chapter title, create an H2 element
+	createElement(""h2"",""And now that you don't have to be perfect, you can be good."");
+
+	// to add text, create paragraph tags (<p>). You can use createElement() or just createP()
+	createP(""And now that you don't have to be perfect, you can be good."");
+
+	// of course, you can use string variables in a loop to make lots of text
+	for (let c = 0; c < 4; c++){
+		createElement(""h2"",""And now that you don't have to be perfect, you can be good."");
+		for (let p = 0; p < 10; p++){
+			createP(""And now that you don't have to be perfect, you can be good."")
+		}
+	}
+
+	// or use any of Rita.js's methods to get some string data
+   // https://rednoise.org/rita/#reference 
+	
+	createElement(""h2"",""And now that you don't have to be something, you can be something."");
+	for (let r = 0; r < 100; r++){
+		createP(""And now that you don't have to be "" + RiTa.randomWord({pos:""jj""}) + 
+              "" you can be "" + RiTa.randomWord({pos:""nn""}) + 
+				  "" and "" + RiTa.randomWord({pos:""jj""}) + 
+				  "" "" + RiTa.randomWord({pos:""nn""}) + ""."")
+	}
+	
+	// this will trigger Paged.js to parse the HTML and render it the book-like layout
+	window.PagedPolyfill.preview();
+}
+
+"
+"2806873","perfect book","index.html","<!DOCTYPE html>
+<html lang=""en"">
+<head>
+	<meta charset=""utf-8"" />
+	<script src=""https://cdn.jsdelivr.net/npm/p5@1.11.7/lib/p5.js""></script>
+
+	<!-- include the Paged.js polyfill -->
+	<script defer src=""https://unpkg.com/pagedjs/dist/paged.polyfill.js""></script>
+
+	<!-- include Rita.js -->
+	<script crossorigin=""anonymous"" onerror=""$OP.scriptLoadError(this)"" language=""javascript"" type=""text/javascript"" src=""https://cdn.jsdelivr.net/npm/rita@3.1.10/dist/rita.min.js""></script>
+
+	
+	<script src=""mySketch.js""></script>
+	
+	<link rel=""stylesheet"" type=""text/css"" href=""interface.css"">
+	<link rel=""stylesheet"" type=""text/css"" href=""style.css"">
+	
+    <script>
+        window.PagedConfig = {auto: false};
+    </script>
+	
+</head>
+<body>   
+	<main></main> 
+
+	<!-- the html content will end up being added here: -->
+	<div id=""content"">
+
+	</div>
+</body>
+</html>"
+"2806873","perfect book","style.css","/* CSS code from examples at https://pagedjs.org/documentation */
+
+body {
+    counter-reset: countChapter;
+    font-family: 'Courier New', serif; /* Added a default font */
+    line-height: 1.5;
+}
+
+@page {
+    size: A5;
+}
+
+@page:left {
+    margin-left: 25mm;
+    margin-right: 18mm;
+    @top-left {
+        content: counter(page);
+    }
+}
+
+@page:right {
+    margin-left: 18mm;
+    margin-right: 25mm;
+
+    @top-right {
+        content: counter(page);
+    }
+}
+
+@page:first {
+    @top-right {
+        content: '';
+    }
+}
+
+p {
+    text-align: justify;
+    text-indent: 2em; /* Added standard book indent */
+    margin-bottom: 0.5em;
+}
+
+h2 {
+    break-before: right; /* Ensures chapters start on a right-side page */
+    counter-increment: countChapter;
+    border-bottom: 5px solid hotpink; /* Added for style */
+    padding-bottom: 10px;
+}
+
+h2::before {
+    content: ""Note "" counter(countChapter);
+    display: block;
+    font-size: 75%;
+    font-variant: all-small-caps;
+    margin-top: 30mm;
+}
+
+h1 {
+    /*break-after: page;*/
+    margin-top: 50%; /* Centered nicely */
+    text-align: center;
+    font-size: 16mm;
+    text-transform: uppercase;
+}
+
+subtitle {
+    text-align: center;
+    break-after: page;
+    font-size: 6mm; /* Adjusted size */
+    display: block;
+    font-style: italic;
+    color: #555;
+}
+
+/* ---  --- */
+/* This targets the <b> tags we put in the Javascript */
+b {
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Marker Felt', sans-serif;
+    font-weight: bold;
+    text-decoration: underline;
+    color: #555;
+}"
+"2806873","perfect book","interface.css","/* CSS for Paged.js interface – v0.4 */
+
+/* Change the look */
+:root {
+    --color-background: whitesmoke;
+    --color-pageSheet: #cfcfcf;
+    --color-pageBox: violet;
+    --color-paper: white;
+    --color-marginBox: transparent;
+    --pagedjs-crop-color: black;
+    --pagedjs-crop-shadow: white;
+    --pagedjs-crop-stroke: 1px;
+}
+
+/* To define how the book look on the screen: */
+@media screen, pagedjs-ignore {
+    body {
+        background-color: var(--color-background);
+    }
+
+    .pagedjs_pages {
+        display: flex;
+        width: calc(var(--pagedjs-width) * 2);
+        flex: 0;
+        flex-wrap: wrap;
+        margin: 0 auto;
+    }
+
+    .pagedjs_page {
+        background-color: var(--color-paper);
+        box-shadow: 0 0 0 1px var(--color-pageSheet);
+        margin: 0;
+        flex-shrink: 0;
+        flex-grow: 0;
+        margin-top: 10mm;
+    }
+
+    .pagedjs_first_page {
+        margin-left: var(--pagedjs-width);
+    }
+
+    .pagedjs_page:last-of-type {
+        margin-bottom: 10mm;
+    }
+
+    .pagedjs_pagebox{
+        box-shadow: 0 0 0 1px var(--color-pageBox);
+    }
+
+    .pagedjs_left_page{
+        z-index: 20;
+        width: calc(var(--pagedjs-bleed-left) + var(--pagedjs-pagebox-width))!important;
+    }
+
+    .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-crop {
+        border-color: transparent;
+    }
+    
+    .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-middle{
+        width: 0;
+    } 
+
+    .pagedjs_right_page{
+        z-index: 10;
+        position: relative;
+        left: calc(var(--pagedjs-bleed-left)*-1);
+    }
+
+    /* show the margin-box */
+
+    .pagedjs_margin-top-left-corner-holder,
+    .pagedjs_margin-top,
+    .pagedjs_margin-top-left,
+    .pagedjs_margin-top-center,
+    .pagedjs_margin-top-right,
+    .pagedjs_margin-top-right-corner-holder,
+    .pagedjs_margin-bottom-left-corner-holder,
+    .pagedjs_margin-bottom,
+    .pagedjs_margin-bottom-left,
+    .pagedjs_margin-bottom-center,
+    .pagedjs_margin-bottom-right,
+    .pagedjs_margin-bottom-right-corner-holder,
+    .pagedjs_margin-right,
+    .pagedjs_margin-right-top,
+    .pagedjs_margin-right-middle,
+    .pagedjs_margin-right-bottom,
+    .pagedjs_margin-left,
+    .pagedjs_margin-left-top,
+    .pagedjs_margin-left-middle,
+    .pagedjs_margin-left-bottom {
+        box-shadow: 0 0 0 1px inset var(--color-marginBox);
+    }
+
+   
+    .pagedjs_pages {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .pagedjs_first_page {
+        margin-left: 0;
+    }
+
+    .pagedjs_page {
+        margin: 0 auto;
+        margin-top: 10mm;
+    } 
+
+    .pagedjs_left_page{
+        width: calc(var(--pagedjs-bleed-left) + var(--pagedjs-pagebox-width) + var(--pagedjs-bleed-left))!important;
+    }
+
+    .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-crop{
+        border-color: var(--pagedjs-crop-color);
+    }
+
+    .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-middle{
+        width: var(--pagedjs-cross-size)!important;
+    } 
+
+    .pagedjs_right_page{
+        left: 0; 
+    } 
+    */
+    
+    
+
+    /*--------------------------------------------------------------------------------------*/
+
+
+
+    /* uncomment this par to see the baseline : -------------------------------------------*/
+
+    
+    /* .pagedjs_pagebox {
+        --pagedjs-baseline: 22px;
+        --pagedjs-baseline-position: 5px;
+        --pagedjs-baseline-color: cyan;
+        background: linear-gradient(transparent 0%, transparent calc(var(--pagedjs-baseline) - 1px), var(--pagedjs-baseline-color) calc(var(--pagedjs-baseline) - 1px), var(--pagedjs-baseline-color) var(--pagedjs-baseline)), transparent;
+        background-size: 100% var(--pagedjs-baseline);
+        background-repeat: repeat-y;
+        background-position-y: var(--pagedjs-baseline-position);
+    }  */
+   
+
+    /*--------------------------------------------------------------------------------------*/
+}
+
+
+
+
+
+/* Marks (to delete when merge in paged.js) */
+
+.pagedjs_marks-crop{
+    z-index: 999999999999;
+  
+}
+
+.pagedjs_bleed-top .pagedjs_marks-crop, 
+.pagedjs_bleed-bottom .pagedjs_marks-crop{
+    box-shadow: 1px 0px 0px 0px var(--pagedjs-crop-shadow);
+}  
+
+.pagedjs_bleed-top .pagedjs_marks-crop:last-child,
+.pagedjs_bleed-bottom .pagedjs_marks-crop:last-child{
+    box-shadow: -1px 0px 0px 0px var(--pagedjs-crop-shadow);
+}  
+
+.pagedjs_bleed-left .pagedjs_marks-crop,
+.pagedjs_bleed-right .pagedjs_marks-crop{
+    box-shadow: 0px 1px 0px 0px var(--pagedjs-crop-shadow);
+}
+
+.pagedjs_bleed-left .pagedjs_marks-crop:last-child,
+.pagedjs_bleed-right .pagedjs_marks-crop:last-child{
+    box-shadow: 0px -1px 0px 0px var(--pagedjs-crop-shadow);
+}"
+"2798560","Wizard Dust","mySketch.js","//wizard/fantasy inspired spellbook
+
+let grammar;
+let json;
+let stanza;
+let result;
+let lines = [];
+
+function preload(){
+	json = my_house;
+}
+
+function setup() {
+
+	background(255, 250, 240);
+
+	
+	createCanvas(800, 600);
+	textFont('Papyrus',  width / 45); 
+	textWrap(WORD); 
+
+	// empty set of lines
+	lines = [];
+
+	// compile the JSON in to a grammar
+	grammar = RiTa.grammar(json);
+
+	// expand the grammar once
+	result = grammar.expand().toUpperCase();
+
+	// split the stanza into lines for printing
+	stanza = result.split(""%""); 
+
+
+}
+
+function draw() {
+
+	background(230,90,159);
+
+	// print each line
+	text(""\n​"" + stanza[0], 25, 75,width);
+	text(""\n​"" + stanza[1], 25, 110, width);
+	text(""\n​"" + stanza[2], 25, 145, width);
+	text(""\n​"" + stanza[3], 25, 180, width);
+}
+function mouseReleased() {
+
+  setup();
+
+}"
+"2798560","Wizard Dust","grammer.json","// const my_house = `{
+//   ""start"": ""$line1 %  $line2 %   $line3 %    $line4"",
+//   ""line1"" : ""A house of $material"",
+//   ""line2"" : ""$place"",
+//   ""line3"" : ""using $material"",
+//   ""line4"" : ""inhabited by $inhabitants"",
+//   ""material"" : ""dust | brick | ..."",
+//   ""place"" : ""on open ground | by a river | ..."",
+//   ""light"" : ""natural light | candles | ..."",
+//   ""inhabitants"" : ""lovers | friends and enemies | ...""
+// }`;
+
+// it turns out you can just define a JS object using JSON syntax 
+// and then it just is JSON...
+
+const my_house = {
+  ""start"": ""$line1 %  $line2 %   $line3 %    $line4"",
+  ""line1"" : ""An incantation of $school"",
+  ""line2"" : ""$origin"",
+  ""line3"" : ""consuming $reagent"",
+  ""line4"" : ""cast by $caster"",
+  ""school"" : ""abyssal flame | pure frost | necromancy | transmutation | kinetic force | shadow binding | illusion | time distortion | mind control | nature's wrath | divine light | blood magic | absolute silence | arcane unlocking | telekinesis | summoning | rotting earth | lightning | mending | invisibility | true sight | chaos"",
+  ""origin"" : ""scribed in a crumbling tome | whispered to a mirror | screamed into a storm | etched upon a staff | found in a dragon's hoard | spoken backwards | sung by a siren | carved into flesh | revealed in a fever dream | hidden in the margins | debated by scholars | banned by the council | floating in the aether | glowing on a scroll | sealed in a bottle"",
+  ""reagent"" : ""a phoenix feather | crushed emeralds | eye of newt | a drop of mercury | grave dirt | a stolen memory | moonlight caught in a jar | dried hemlock | a single tear | powdered bone | sulfur and ash | a true name | dragon's breath | a silver coin | morning dew | a spider's web | ancient ink | a black lotus | nothing but willpower | a piece of the caster's soul"",
+  ""caster"" : ""a frantic apprentice | a hollow lich | the high archmage | a hedge wizard | a swamp hag | a curious bard | a paladin in desperation | a cultist | a goblin shaman | a sorcerer of the old blood | a magical construct | a possessed child | a dusty librarian | a weary traveler | a thief stealing power | the last elf | a talking skull | a dual-wielding battlemage""
+}"
+"2783698","My Sketch","mySketch","// The wave's vertical position changes over 24 hours (controlled by hour()), sinking low during the day and rising at night.
+// The wave's amplitude (height) changes over 60 minutes (controlled by minute()), getting more agitated as the hour approaches its end.
+// The wave's horizontal scroll is continuous and smooth, controlled by seconds and milliseconds, representing ceaseless flow.
+// The background color transitions smoothly through the 24-hour cycle, mimicking the natural light and dark rhythm of Earth.
+
+// Defining Colors for the 24-hour cycle (Midnight, Sunrise, Noon, Sunset)
+let colorMidnight, colorSunrise, colorNoon, colorSunset;
+let waveFrequency = 0.05; // Base frequency for the sine wave
+let waveSpeed = 0.005; // Controls the speed of the wave's horizontal scroll
+
+function preload() {
+    // No images needed for this abstract visualization, but we keep the function structure
+}
+
+function setup() {
+    createCanvas(windowWidth, windowHeight);
+    noStroke();
+    
+    // Define our key colors
+    colorMidnight = color(20, 0, 50);      // Deep Indigo/Near Black (00:00)
+    colorSunrise = color(255, 150, 80);   // Soft Peach/Orange (06:00)
+    colorNoon = color(100, 180, 255);     // Bright Sky Blue (12:00)
+    colorSunset = color(150, 50, 100);    // Deep Violet/Red (18:00)
+}
+
+function draw() {
+    let hr = hour();   // 0-23
+    let mn = minute(); // 0-59
+    let sec = second(); // 0-59
+    let ms = millis(); // Milliseconds since sketch started
+    
+    // --- 1. Background Color Transition (24-hour cycle) ---
+    // Normalize the current time (hr + mn/60 + sec/3600) to a 0-1 range for a full 24-hour cycle
+    let normalizedTime = (hr + mn / 60 + sec / 3600);
+    let lerpFactor = map(normalizedTime, 0, 24, 0, 1);
+    
+    let backgroundColor;
+    
+    // Smoothly interpolate between the four key colors
+    if (lerpFactor >= 0 && lerpFactor < 0.25) { // Midnight (0) to Sunrise (0.25)
+        let subLerp = map(lerpFactor, 0, 0.25, 0, 1);
+        backgroundColor = lerpColor(colorMidnight, colorSunrise, subLerp);
+    } else if (lerpFactor >= 0.25 && lerpFactor < 0.5) { // Sunrise (0.25) to Noon (0.5)
+        let subLerp = map(lerpFactor, 0.25, 0.5, 0, 1);
+        backgroundColor = lerpColor(colorSunrise, colorNoon, subLerp);
+    } else if (lerpFactor >= 0.5 && lerpFactor < 0.75) { // Noon (0.5) to Sunset (0.75)
+        let subLerp = map(lerpFactor, 0.5, 0.75, 0, 1);
+        backgroundColor = lerpColor(colorNoon, colorSunset, subLerp);
+    } else { // Sunset (0.75) to Midnight (1)
+        let subLerp = map(lerpFactor, 0.75, 1, 0, 1);
+        backgroundColor = lerpColor(colorSunset, colorMidnight, subLerp);
+    }
+    
+    background(backgroundColor);
+
+
+    // --- 2. Wave Properties Controlled by Time ---
+    
+    // Wave Vertical Offset (24-hour cycle - The Hour Marker)
+    // Wave is high at night (0.2), low during the day (0.8)
+    let waveVerticalOffset = map(hr + mn / 60, 0, 24, height * 0.2, height * 0.8);
+
+    // Wave Amplitude (60-minute cycle - The Minute Tension)
+    // Wave is calm at start of hour, agitated towards end of hour
+    let minAmp = height * 0.02; 
+    let maxAmp = height * 0.15; 
+    let waveAmplitude = map(mn, 0, 59, minAmp, maxAmp);
+
+    // Wave Horizontal Movement (Continuous Flow - The Second Hand)
+    let timeInSeconds = hr * 3600 + mn * 60 + sec + ms / 1000;
+    let waveOffsetX = timeInSeconds * waveSpeed;
+
+    // --- 3. Draw the Wave ---
+    
+    // The main time visualization (The Tide)
+    fill(255, 255, 255, 180); // Semi-transparent white wave
+    beginShape();
+    vertex(0, height); 
+    
+    let xoff = waveOffsetX; 
+    for (let x = 0; x <= width; x += 10) { 
+        let y = waveVerticalOffset + sin(x * waveFrequency + xoff) * waveAmplitude;
+        vertex(x, y);
+        xoff += 0.05; 
+    }
+    
+    vertex(width, height); 
+    endShape(CLOSE); 
+
+    // --- 4. Add Explicit Clock Indicators (The Buoys) ---
+    
+    // A. The Minute-Marker Buoys (Horizontal position shows the current Minute)
+    // Maps 0-59 minutes to a specific horizontal position.
+    let minX = map(mn, 0, 59, 0.1 * width, 0.9 * width); // Horizontal minute marker
+    
+    // The Y position for the buoys is the baseline of the hour marker
+    let buoyY = waveVerticalOffset; 
+    
+    // Draw the minute indicator
+    fill(255, 100, 100); // Red Buoy
+    ellipse(minX, buoyY, 15, 15);
+    
+    // B. The Second-Marker Buoy (Vertical position shows the current Second)
+    // Maps 0-59 seconds to a specific vertical deviation from the minute buoy's position.
+    let secY = map(sec + ms / 1000, 0, 60, -waveAmplitude * 0.8, waveAmplitude * 0.8);
+    
+    // Draw the second indicator, bobbing up and down around the minute buoy's baseline
+    fill(50, 200, 255); // Cyan Buoy
+    ellipse(minX, buoyY + secY, 10, 10);
+
+    // C. Hour-Markers (Subtle horizontal lines showing the 24 possible hour levels)
+    // This helps visualize the 24-hour cycle of the wave's vertical offset.
+    stroke(255, 255, 255, 50); // Faint white lines
+    strokeWeight(1);
+    for (let h_mark = 0; h_mark < 24; h_mark += 1) {
+        let h_level = map(h_mark, 0, 24, height * 0.2, height * 0.8);
+        line(0, h_level, width, h_level);
+    }
+    noStroke(); // Turn stroke off again for the wave
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}"
+"2773954","Time","mySketch","let hr;
+let mn;
+let sec;
+
+function setup() {
+	createCanvas(windowWidth, windowHeight);
+	background(100);
+	noStroke();
+}
+
+function draw() {
+	//circle(mouseX, mouseY, 20);
+	hr = hour();
+	mn = minute();
+	sec = second();
+let hr_position = map(hr,0,23,0,height);
+	let mn_position = map(mn,0,100,0,width);
+	let sec_position = map(sec,0,59,0,height);
+
+	circle(200,hr_position,100);
+	
+	circle(300,mn_position,100);
+	circle(100,sec_position,100);
+}"
+"2773825","ripples","mySketch","let ripplers = [];
+let maxDiameter;
+const backgroundColor = [26, 32, 44];
+
+// --- RIPPLE CLASS ---
+class Rippler {
+    constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.diameter = 0; // Starts small
+        this.alpha = 255; // Starts fully opaque
+        this.speed = 3.5; // Expansion rate (pixels per frame)
+        this.strokeWeight = 4; // Initial line thickness
+    }
+
+    // Updates the state of the ripple (size, transparency, and thickness)
+    update() {
+        // Expand the ripple
+        this.diameter += this.speed;
+
+        // Fade the ripple out (decrease opacity)
+        this.alpha -= 4.5;
+        
+        // Gradually thin the line as it expands for a softer look
+        if (this.strokeWeight > 0.5) {
+            this.strokeWeight *= 0.98;
+        }
+    }
+
+    // Draws the ripple on the canvas
+    display() {
+        noFill();
+        
+        // Use HSB color mode for easier control over color and brightness
+        colorMode(HSB, 360, 100, 100, 255);
+        
+        // Define a cyan/blue ripple color that fades based on its alpha value
+        let rippleColor = color(190, 80, 90, this.alpha);
+        
+        stroke(rippleColor);
+        strokeWeight(this.strokeWeight);
+        ellipse(this.x, this.y, this.diameter);
+
+        // Reset back to the default RGB mode
+        colorMode(RGB, 255, 255, 255, 255);
+    }
+    isFinished() {
+        // Checks against the global maxDiameter
+        return this.alpha <= 0 || this.diameter > maxDiameter;
+    }
+}
+
+
+function setup() {
+    // Create a responsive square canvas (up to 700x700 for better view)
+    let canvasSize = Math.min(windowWidth * 0.9, windowHeight * 0.7, 700);
+    createCanvas(canvasSize, canvasSize);
+    
+    // Set max diameter slightly larger than the canvas diagonal to ensure full fade-out
+    maxDiameter = Math.sqrt(width * width + height * height) * 1.2;
+    
+    background(backgroundColor[0], backgroundColor[1], backgroundColor[2]);
+}
+
+function draw() {
+    // Redraw the background with slight transparency (80/255) to create a subtle trail/decay effect
+    background(backgroundColor[0], backgroundColor[1], backgroundColor[2], 80);
+
+    // Iterate backward to safely remove elements using splice() while looping
+    for (let i = ripplers.length - 1; i >= 0; i--) {
+        ripplers[i].update();
+        ripplers[i].display();
+        
+        // Remove the ripple if it's finished
+        if (ripplers[i].isFinished()) {
+            ripplers.splice(i, 1);
+        }
+    }
+}
+
+function mousePressed() {
+    // Only create a ripple if the mouse/touch is within the canvas bounds
+    if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+        // Add a new ripple object at the current mouse position
+        ripplers.push(new Rippler(mouseX, mouseY));
+    }
+}
+
+function windowResized() {
+    let canvasSize = Math.min(windowWidth * 0.9, windowHeight * 0.7, 700);
+    resizeCanvas(canvasSize, canvasSize);
+    maxDiameter = Math.sqrt(width * width + height * height) * 1.2;
+    // Clear canvas background on resize
+    background(backgroundColor[0], backgroundColor[1], backgroundColor[2]); 
+}
+"
+"2770649","Scary Burger chase","mySketch","// initial variable declarations
+let speedfactor = 3;
+let spriteIMG;
+
+// Initialized movement variables and game constants
+let xspeed = speedfactor; 
+let yspeed = speedfactor; 
+let x; // Sprite's current X position
+let y; // Sprite's current Y position
+let speed = 1;
+let dimension = 100;
+let offset = dimension / 2;
+let score = 0;
+const spriteSize = 65; 
+
+// Changed this from 'const' to 'let' because you were trying to reassign it
+let catchRadius = 25; 
+
+function preload() {
+	// The sprite image is the ""burger"" following the mouse
+	spriteIMG = loadImage(""https://i.imgur.com/CBFrisC.png"");
+}
+
+function setup() {
+	createCanvas(windowWidth, windowHeight);
+	// Initialize the sprite in the center
+	x = width / 2;
+	y = height / 2;
+}
+
+function draw() {
+	background(""black"");
+
+	// Display the score in the top-left corner
+	fill(""red"");
+	textSize(65);
+	textFont(""Arial"");
+	text(score, 50, 70); // Adjusted Y slightly for better placement
+	
+	
+	// --- 1. Movement Logic (Follow the Mouse) ---
+    
+    // Calculate the difference between the sprite's position and the mouse
+    let dx = mouseX - x;
+    let dy = mouseY - y;
+    
+    // Calculate the direct distance between the sprite and the mouse (REQUIRED for collision)
+    let distance = dist(x, y, mouseX, mouseY);
+    
+    // Move the sprite only if it's not directly on the mouse to prevent jitter
+    if (distance > 1) {
+        // Normalize the direction vector (dx/distance, dy/distance) and scale it by speedfactor.
+        xspeed = (dx / distance) * speedfactor;
+        yspeed = (dy / distance) * speedfactor;
+        
+        // Update the sprite's position
+        x += xspeed;
+        y += yspeed;
+    }
+
+    // --- 2. Draw Sprite (the Burger) ---
+    // Draw the image, centered at the calculated (x, y) coordinates
+    image(spriteIMG, x - spriteSize / 2, y - spriteSize / 2, spriteSize, spriteSize);
+
+
+    // --- 3. Collision Detection and Reset ---
+    
+    // If the distance is less than the catchRadius, a collision is registered
+    if (distance < catchRadius) {
+		
+        // --- score ---
+        // Increment the score variable by 1
+        score++;
+        
+        // Optionally, update the catchRadius (as you attempted before) to change game difficulty
+        catchRadius = 25 - (score * 0.5); 
+        if (catchRadius < 10) { catchRadius = 10; } // Minimum catch radius
+        
+        // Reset the follower's position to a new random location on the canvas (REQUIRED)
+        x = random(width);
+        y = random(height);
+
+        // Simple visual feedback: Flash the background red momentarily
+        background(200, 50, 50); 
+    }
+    
+    // The stick figure is drawn centered at (mouseX, mouseY)
+    noFill(); //only want the lines/outline
+    stroke(255); // White color
+    strokeWeight(2);
+
+    // Head (small circle)
+    ellipse(mouseX, mouseY - 10, 10, 10); 
+
+    // Body (vertical line)
+    line(mouseX, mouseY - 4, mouseX, mouseY + 4);
+
+    // Arms (horizontal line)
+    line(mouseX - 5, mouseY, mouseX + 5, mouseY);
+    
+    // Legs (V-shape lines)
+    line(mouseX, mouseY + 4, mouseX - 4, mouseY + 12);
+    line(mouseX, mouseY + 4, mouseX + 4, mouseY + 12);
+}
+"
+"2770216","follow","mySketch","let spriteImg;
+let speedfactor = 3;
+
+// Initialized movement variables
+let xspeed = speedfactor; 
+let yspeed = speedfactor; 
+let x; // Sprite's current X position
+let y; // Sprite's current Y position
+
+// --- Game Constants ---
+const canvasSize = 600; 
+const catchRadius = 25; // The distance threshold for a ""catch""
+const spriteSize = 50; 
+
+/**
+ * The preload function is used to load assets before setup runs.
+ * This ensures the image is ready when the sketch starts.
+ */
+function preload() {
+    // Placeholder image (simple 'X' text on a square)
+    const imageUrl = ""https://placehold.co/"" + spriteSize + ""X"" + spriteSize + ""/cc0000/ffffff?text=X"";
+    spriteImg = loadImage(imageUrl);
+}
+
+/**
+ * The setup function runs once when the sketch is started.
+ */
+function setup() {
+    createCanvas(canvasSize, canvasSize);
+
+    // Initialize position to the center of the canvas
+    x = width / 2;
+    y = height / 2;
+
+    // Align image drawing from its center point, not the top-left corner (REQUIRED)
+    imageMode(CENTER);
+}
+
+/**
+ * The draw function runs continuously, creating the animation loop.
+ */
+function draw() {
+    background(50); // Simple dark background
+
+    // --- 1. Movement Logic (Follow the Mouse) ---
+    
+    // Calculate the difference between the sprite's position and the mouse
+    let dx = mouseX - x;
+    let dy = mouseY - y;
+    
+    // Calculate the direct distance between the sprite and the mouse (REQUIRED for collision)
+    let distance = dist(x, y, mouseX, mouseY);
+    
+    // Move the sprite only if it's not directly on the mouse to prevent jitter
+    if (distance > 1) {
+        // Normalize the direction vector (dx/distance, dy/distance) and scale it by speedfactor.
+        xspeed = (dx / distance) * speedfactor;
+        yspeed = (dy / distance) * speedfactor;
+        
+        // Update the sprite's position
+        x += xspeed;
+        y += yspeed;
+    }
+
+    // --- 2. Draw Sprite ---
+    // Draw the image, centered at the calculated (x, y) coordinates
+    image(spriteImg, x, y, spriteSize, spriteSize);
+
+    // --- 3. Collision Detection and Reset (REQUIRED) ---
+    
+    // If the distance is less than the catchRadius, a collision is registered
+    if (distance < catchRadius) {
+        // Successful ""catch"" detected!
+        
+        // Reset the follower's position to a new random location on the canvas (REQUIRED)
+        x = random(width);
+        y = random(height);
+
+        // Simple visual feedback: Flash the background red momentarily
+        background(200, 50, 50); 
+    }
+}
+"
+"2762242","Bouncy :) crazy","mySketch","function setup(){
+	//make a canvas
+	createCanvas (600,600);
+	background(100);
+	
+}
+//letting some ball
+let ballX = 150;
+let ballY = 250;
+let ballD = 60;
+
+function draw(){
+
+	background(100, 100, 100, 80);
+	
+	//change ball x and y
+	ballX = random(0, width);
+	ballY = random(height, 0);
+	
+	//draw circle
+	circle(ballX, ballY, ballD);
+	
+}"
+"2762209","Bouncy :)","mySketch","function setup(){
+	//make a canvas
+	createCanvas (600,600);
+	background(100);
+	
+}
+//ball letting
+let ballX = 150;
+let ballY = 250;
+let ballD = 60;
+
+//speed letting;
+let speedx = 0;
+let speedy = 0;
+
+//color letting
+let color1, color2, color3, color4;
+
+	//speed
+	speedx = 5;
+	speedy = 5;
+
+function draw(){
+	fill ( color1, color2, color3, color4);
+	noStroke();
+	background(0,0,0,20);
+	
+	//change ball x and y
+	ballX = ballX + speedx;
+	ballY = ballY + speedy;
+	
+if(ballX > width | ballX < 0) { // Bounce off X-Axis
+		 speedx = -speedx;
+	color1= random(186, 252 );
+		color2= random( 255, 47);
+		color3= random(17,255);
+	color4 = random(255,162);
+	
+}
+	if(ballY > height - 30 | ballY < 0) { 
+		 speedy = -speedy;
+		 speedx =- speedx;
+		color1 = random(247, 74);
+	  color2 = random(7, 247);
+	  color3 = random(123, 0);
+	  color4 = random(248, 252);
+	}
+	
+	//draw circle
+	circle(ballX, ballY, ballD);
+	
+
+}"
+"2762155","Bouncy :)","mySketch","// Define the global variables.
+// The balls variable will contain all the
+// balls in the canvas.
+let balls = [];
+
+// The threshold variable will be used to check
+// if the mobile device has been moved enough to
+// initiate a response.
+let threshold = 30;
+
+// accChangeX and accChangeY will measure the acceleration
+// when the mobile device is moved.
+let accChangeX = 0;
+let accChangeY = 0;
+
+// accChangeT will be used to calculate the overall change
+// for the mobile device's position.
+let accChangeT = 0;
+
+function setup() {
+  describe(
+    'Twenty circles that bounce around in the canvas whenever the mobile device is tilted.'
+  );
+
+  // Create a canvas that fills the entire viewport display.
+  createCanvas(displayWidth, displayHeight);
+
+  // Create 20 instances of the Ball class.
+  for (let i = 0; i < 20; i++) {
+    balls.push(new Ball());
+  }
+}
+
+function draw() {
+  background(0);
+
+  // For each ball created, move the ball
+  // in response to the measurements gathered
+  // by the checkForShake() function.
+  for (let i = 0; i < balls.length; i++) {
+    balls[i].move();
+    balls[i].display();
+  }
+  checkForShake();
+}
+
+function checkForShake() {
+  // Calculate the total change for accelerationX and accelerationY.
+  accChangeX = abs(accelerationX - pAccelerationX);
+  accChangeY = abs(accelerationY - pAccelerationY);
+
+  // Calculate the overall change in the mobile device's acceleration.
+  accChangeT = accChangeX + accChangeY;
+
+  // If the overall change meets or is greater than the threshold,
+  // call the shake() and turn() methods and change the direction
+  // and speed of each ball.
+  if (accChangeT >= threshold) {
+    for (let i = 0; i < balls.length; i++) {
+      balls[i].shake();
+      balls[i].turn();
+    }
+  }
+  // If the overall change doesn't meet the threshold,
+  // gradually slow down the ball movement.
+  else {
+    for (let i = 0; i < balls.length; i++) {
+      balls[i].stopShake();
+      balls[i].turn();
+      balls[i].move();
+    }
+  }
+}
+
+// Create the Ball class.
+class Ball {
+  constructor() {
+    // Make each ball created have a random size, speed, and starting
+    // placement in the canvas.
+    this.x = random(width);
+    this.y = random(height);
+    this.diameter = random(10, 30);
+    this.xspeed = random(-2, 2);
+    this.yspeed = random(-2, 2);
+    this.direction = 0.7;
+
+    // oxspeed will be used to calculate the decrease in speed in the
+    // stopShake() method.
+    this.oxspeed = this.xspeed;
+    this.oyspeed = this.yspeed;
+  }
+
+  // Whenever the ball's move() method is called,
+  // multiply its speed and direction of movement
+  // and have that equal its new placement in the canvas.
+  move() {
+    this.x += this.xspeed * this.direction;
+    this.y += this.yspeed * this.direction;
+  }
+
+  // If the ball ever touches the edge of the canvas,
+  // have it bounce off the edge.
+  turn() {
+    if (this.x < 0) {
+      this.x = 0;
+      this.direction = -this.direction;
+    } else if (this.y < 0) {
+      this.y = 0;
+      this.direction = -this.direction;
+    } else if (this.x > width - 20) {
+      this.x = width - 20;
+      this.direction = -this.direction;
+    } else if (this.y > height - 20) {
+      this.y = height - 20;
+      this.direction = -this.direction;
+    }
+  }
+
+  // Whenever the ball's shake() method is called,
+  // add to the speed of the ball based on
+  // the change in the accelerationX value.
+  shake() {
+    this.xspeed += random(5, accChangeX / 3);
+    this.yspeed += random(5, accChangeX / 3);
+  }
+
+  // Whenever the ball's stopShake() method is called,
+  // gradually slow down its speed.
+  stopShake() {
+    if (this.xspeed > this.oxspeed) {
+      this.xspeed -= 0.6;
+    } else {
+      this.xspeed = this.oxspeed;
+    }
+    if (this.yspeed > this.oyspeed) {
+      this.yspeed -= 0.6;
+    } else {
+      this.yspeed = this.oyspeed;
+    }
+  }
+
+  // Draw the ball on the canvas, given its randomized diameter
+  // and current coordinates calculated with the methods listed above.
+  display() {
+    ellipse(this.x, this.y, this.diameter, this.diameter);
+  }
+}"
+"2756826","landscape","mySketch","let skyColorStart;
+let skyColorEnd;
+let mountainColor1;
+let mountainColor2;
+let groundColor;
+
+function setup() {
+  createCanvas(800, 600);
+  // Define colors for the sky and mountains
+  skyColorStart = color(100, 150, 255); // Light blue for the top of the sky
+  skyColorEnd = color(255, 200, 100);   // Warm orange/yellow for the horizon
+
+  mountainColor1 = color(80, 100, 120, 200); // Darker, slightly transparent mountains
+  mountainColor2 = color(120, 140, 160, 200); // Lighter, slightly transparent mountains
+  groundColor = color(70, 120, 70); // Greenish ground
+
+  noLoop(); // We'll draw once, but you can remove this to animate
+}
+
+function draw() {
+  drawSky();
+  drawMountains(50, 0.008, 150, mountainColor1); // Back mountains
+  drawMountains(100, 0.015, 100, mountainColor2); // Middle mountains
+  drawGround(0.02); // Foreground ground
+}
+
+function drawSky() {
+  // Draw a gradient sky using lerpColor
+  for (let y = 0; y < height; y++) {
+    let inter = map(y, 0, height, 0, 1);
+    let c = lerpColor(skyColorStart, skyColorEnd, inter);
+    stroke(c);
+    line(0, y, width, y);
+  }
+}
+
+function drawMountains(offsetY, noiseScale, amplitude, mountainColor) {
+  fill(mountainColor);
+  noStroke();
+
+  beginShape();
+  vertex(0, height); // Start at bottom-left
+  let startX = random(1000); // Offset noise for variety
+
+  for (let x = 0; x <= width; x++) {
+    // Perlin noise for organic mountain shapes
+    // x * noiseScale determines how ""wavy"" the mountains are
+    // amplitude determines the height variation
+    // offsetY shifts the mountains up/down
+    let y = map(noise(startX + x * noiseScale), 0, 1, height - amplitude - offsetY, height - offsetY);
+    vertex(x, y);
+  }
+  vertex(width, height); // End at bottom-right
+  endShape(CLOSE);
+}
+
+function drawGround(noiseScale) {
+  fill(groundColor);
+  noStroke();
+
+  beginShape();
+  vertex(0, height);
+  let startX = random(1000); // Offset noise for variety
+
+  for (let x = 0; x <= width; x++) {
+    // Ground is relatively flatter, so less amplitude
+    let y = map(noise(startX + x * noiseScale), 0, 1, height - 80, height - 30);
+    vertex(x, y);
+  }
+  vertex(width, height);
+  endShape(CLOSE);
+}
+
+
+function keyPressed() {
+  if (key === 'r' || key === 'R') {
+    redraw();
+  }
+}"
+"2747831","3D sock monkey face","mySketch","function setup() {
+  createCanvas(800, 800, WEBGL);
+}
+//artist statement
+//I wanted to make a sock monkey using the 3D software.
+//I want to figure out some sort of thing you can do with the monkey.
+//maybe the monkey looks at your mouse when you move it.
+//My sock monkey is stupid and is cross eyed. 
+//all of the work is my own.
+
+function draw() {
+  background(185, 228, 250);
+  lights();
+  noStroke();
+  orbitControl();
+	
+  // The head
+  push();
+	fill(142, 118, 90);
+  scale(1, 1, 1);
+  sphere(50);
+  pop();
+
+	// The lips
+  push()
+	fill(250,0,100);
+  translate(0, 20, 45);
+  scale(2, 0.8, 0.9);
+  sphere(14);
+  pop()
+ // The mouth
+  push()
+	fill(222,211, 197);
+  translate(0, 20, 40);
+  scale(1.5, 1, 0.7);
+  sphere(20);
+  pop()
+
+	//body
+	push()
+	fill(142,118,90);
+	translate(0,155,0)
+	scale(1,2.2,1);
+	sphere(60);
+	pop()
+
+	//tummy color
+	push()
+	fill(222,211,197);
+	translate(0, 170, 48);
+	scale(0.9, 1.7, 0.4);
+	sphere(40);
+	pop()
+
+  // map(value, start1, stop1, start2, stop2)
+  let lookX = map(mouseX, 0, width, -1, 1);
+  let lookY = map(mouseY, 0, height, -1, 1);
+	
+ 
+  // Limit the movement range
+  let eyeOffset = 2; 
+  let pupilX = lookX * eyeOffset;
+  let pupilY = lookY * eyeOffset;
+
+	
+  // Draw symmetrical parts by looping over each
+  // side, represented by the horizontal scale applied.
+  for (let side of [-1, 1]) {
+    push();
+    // Apply the symmetrical transformation
+    scale(side, 1, 1);
+   
+    // Black Eye (Pupil)
+    push();
+	 fill(0,10,4);
+    translate(20 + pupilX, 1 + pupilY, 45); 
+    sphere(6);
+    pop();
+
+	  // White Eye Socket
+	  push();
+	 fill(255,255,255);
+    translate(20,0,40);
+    sphere(9);
+    pop();
+   
+		//nose holes
+		push();
+		fill(0,0,0);
+		translate(10,9,50);
+		sphere(1.5);
+		pop();
+		
+    // Ears
+    push();
+		fill(105, 84, 56);
+    translate(50, 0, 0);
+    scale(1, 1, 0.2);
+    sphere(20);
+    pop();
+
+	  	//arms
+	push()
+		fill(142,118,90);
+	translate(50,70,0);
+	scale(2.5,0.5,0.5);
+	sphere(40);
+	pop()
+
+	  //legs
+	  push()
+	  fill(142,118,90);
+	  translate(30,300,0);
+	  scale(0.5,2.5,0.5);
+	  sphere(40);
+	  pop()
+	  
+    pop();
+  }
+	
+}"
+"2747831","3D sock monkey face","tab2",""
+"2747207","Vera Molnar|5 Carres, 5 Rouges","mySketch","const diameter = 190;
+const spacing = 192;
+const gridWidth = 3;
+
+function setup() {
+	createCanvas(500,500);
+	background('#ffffff');
+	noLoop();
+
+	}
+//'5 Carres, 5 Rouges', by Vera Molnar,2018 .
+// https://www.artsy.net/artwork/vera-molnar-5-carres-5-rouges
+
+
+function draw() {
+
+	// random square teehehee
+for(let i = 0; i < 5; i++){
+	let randomRed = random(100, 255);
+	fill(randomRed, 0,0);
+	noStroke();
+	let x = random(20, width -100);
+	let y = random (20, height -100);
+	
+	let angle = random(0, 360);
+	let Size = random (150, 100);
+	
+	push();
+	translate(x,y);
+	rotate(radians(angle));
+	rectMode(CENTER);
+	rect(0,0,Size,Size);
+	pop();
+}
+	}"
+"2740133","grid","mySketch","function setup() {
+            createCanvas(windowWidth, windowHeight);
+            background(255);
+            // Set color mode to HSB (Hue: 0-360, Saturation: 0-100, Brightness: 0-100)
+            colorMode(HSB, 360, 100, 100);
+            noLoop();
+        }
+
+        function draw() {
+            let circRad = 40; 
+            let spacing = circRad * 1.5; 
+            
+            noStroke(); 
+
+            for (let y = spacing; y < height - spacing; y += spacing) {
+                for (let x = spacing; x < width - spacing; x += spacing) {
+                    
+                    let randomHue = random(360);
+                    fill(randomHue, 85, 100);
+                    
+                    let randomRadius = random(circRad * 0.95, circRad * 1.25);
+                    
+                    circle(x, y, randomRadius);
+                }
+            }
+        }
+        
+        function windowResized() {
+          resizeCanvas(windowWidth, windowHeight);
+          background(0);
+          redraw();
+        }"
+"2739642","grid","mySketch","function setup() {
+            createCanvas(windowWidth, windowHeight);
+            background(0);
+            // Set color mode to HSB (Hue: 0-360, Saturation: 0-100, Brightness: 0-100)
+            colorMode(HSB, 360, 100, 100);
+            noLoop();
+        }
+
+        function draw() {
+            let circRad = 40; 
+            let spacing = circRad * 1.5; 
+            
+            noStroke(); 
+
+            for (let y = spacing; y < height - spacing; y += spacing) {
+                for (let x = spacing; x < width - spacing; x += spacing) {
+                    
+                    let randomHue = random(360);
+                    fill(randomHue, 85, 100);
+                    
+                    let randomRadius = random(circRad * 0.75, circRad * 1.25);
+                    
+                    circle(x, y, randomRadius);
+                }
+            }
+        }
+        
+        function windowResized() {
+          resizeCanvas(windowWidth, windowHeight);
+          background(0);
+          redraw();
+        }"
+"2727727","my emoji","mySketch","function setup() {
+	createCanvas(windowWidth, windowHeight);
+	background(100);
+}
+
+function draw() {
+	//create a more realistic-looking burger emoji 🍔
+
+	// Use a variable for the center of the burger for easier positioning
+	let burgerX = width / 2;
+	let burgerY = height / 2;
+	
+	// Set the overall scale of the burger
+	let burgerWidth = 500;
+	let bunHeight = 100;
+	let meatHeight = 150;
+	
+	// No stroke for the main ingredients to give a cleaner look
+	noStroke();
+	
+	// Bottom bun (light brown)
+	fill(227, 153, 10);
+	arc(burgerX, burgerY + meatHeight / 2, burgerWidth, bunHeight, 0, PI);
+	
+	// Lettuce (green)
+	fill(76, 175, 80);
+	rect(burgerX - burgerWidth / 2, burgerY + meatHeight / 2 - 20, burgerWidth, 20);
+	
+	// Tomato (red)
+	fill(244, 67, 54);
+	rect(burgerX - burgerWidth / 2, burgerY + meatHeight / 2 - 40, burgerWidth, 20);
+	
+	// Meat patty (dark brown)
+	fill(61, 18, 6);
+	rect(burgerX - burgerWidth / 2, burgerY - meatHeight / 3.5 - 30, burgerWidth , meatHeight - 40);
+	
+	// Cheese (yellow)
+	fill(255, 235, 59);
+	rect(burgerX - burgerWidth / 2, burgerY - meatHeight / 2 - 17, burgerWidth, 20);
+
+	// Top bun (light brown with sesame seeds)
+	fill(227, 153, 10);
+	arc(burgerX, burgerY - meatHeight / 2, burgerWidth, bunHeight +70, PI, TWO_PI);
+	
+	// Add some sesame seeds to the top bun (white dots)
+	fill(255);
+	ellipse(burgerX - 100, burgerY - meatHeight / 2 - 50, 10, 5);
+	ellipse(burgerX - 50, burgerY - meatHeight / 2 - 75, 10, 5);
+	ellipse(burgerX + 0, burgerY - meatHeight / 2 - 60, 10, 5);
+	ellipse(burgerX + 70, burgerY - meatHeight / 2 - 80, 10, 5);
+	ellipse(burgerX + 130, burgerY - meatHeight / 2 - 67, 10, 5);
+}
+
+"
+"2724808","self portrait","index.html","<!DOCTYPE html>
+<html lang=""en"">
+<head>
+    <meta charset=""UTF-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+    <title>Emma's Page</title>
+    <style>
+        /* 
+        Simple introduction page, using fun visual shapes instead of boring charts.
+        Stars show my skills, flowers show my hobbies, and bubbles show what I love!
+        */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+            color: #333;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section h2 {
+            text-align: center;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+        
+        /* Simple Skills Stars */
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .skill {
+            text-align: center;
+        }
+        
+        .star {
+            font-size: 2em;
+            color: #f39c12;
+            margin-bottom: 5px;
+        }
+        
+        /* Simple Hobby Flowers */
+        .hobbies {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .hobby {
+            text-align: center;
+        }
+        
+        .flower {
+            font-size: 3em;
+            margin-bottom: 5px;
+        }
+        
+        /* Simple Bubbles */
+        .interests {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .bubble {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: bold;
+        }
+        
+        /* Simple image */
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class=""header"">
+        <div class=""profile-image"">👩‍🎨</div>
+        <h1>Hi, I'm Emma!</h1>
+        <p>CDS & Italian Studies major, CS minor. I love art, anime, and hanging out with friends!</p>
+    </div>
+    
+    <div class=""section"">
+        <h2>My Skills</h2>
+        <div class=""skills"">
+            <div class=""skill"">
+                <div class=""star"">⭐⭐⭐⭐⭐</div>
+                <div>Drawing</div>
+            </div>
+            <div class=""skill"">
+                <div class=""star"">⭐⭐⭐⭐</div>
+                <div>Italian</div>
+            </div>
+            <div class=""skill"">
+                <div class=""star"">⭐⭐⭐</div>
+                <div>Coding</div>
+            </div>
+            <div class=""skill"">
+                <div class=""star"">⭐⭐⭐⭐</div>
+                <div>Problem solving</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class=""section"">
+        <h2>My Hobbies</h2>
+        <div class=""hobbies"">
+            <div class=""hobby"">
+                <div class=""flower"">🌸🌸🌸🌸🌸</div>
+                <div>Drawing (10h/week)</div>
+            </div>
+            <div class=""hobby"">
+                <div class=""flower"">🌺🌺🌺🌺🌺🌺</div>
+                <div>Anime (12h/week)</div>
+            </div>
+            <div class=""hobby"">
+                <div class=""flower"">🌻🌻🌻</div>
+                <div>Working Out (8h/week)</div>
+            </div>
+            <div class=""hobby"">
+                <div class=""flower"">🌷🌷🌷🌷</div>
+                <div>Friends (24/7)</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class=""section"">
+        <h2>Things I Love</h2>
+        <div class=""interests"">
+            <div class=""bubble"">🎌 Anime</div>
+            <div class=""bubble"">🎨 Art</div>
+            <div class=""bubble"">💪 Fitness</div>
+            <div class=""bubble"">👫 Friends</div>
+            <div class=""bubble"">🇮🇹 Italy</div>
+        </div>
+    </div>
+</body>
+</html>"
+"2714688","Exercise 1.3 Starter","index.html","<!DOCTYPE html>
+<html lang=""en"">
+<head>
+	<meta charset=""utf-8"" />
+	<link rel=""stylesheet"" type=""text/css"" href=""style.css"">
+</head>
+<body>   
+	<!-- 
+<p>Make a poem with words floating around the screen</p>
+	<p> or make a circle of works moving around</p>
+ I made this concrete poem myself and it came to me from the idea of everyday life. I wanted it
+to be interactable so that is why you can adjust the speeds by how the days may feel.
+-->
+
+	<div class=""carousel-container"">
+        <div class=""spinning-circle"" id=""spinningCircle"">
+            <div class=""text-element"">Sleep</div>
+            <div class=""text-element"">Eat</div>
+            <div class=""text-element"">Work</div>
+            <div class=""text-element"">Eat</div>
+            <div class=""text-element"">Sleep</div>
+            <div class=""text-element"">Eat</div>
+            <div class=""text-element"">Work</div>
+            <div class=""text-element"">Eat</div>
+            <div class=""text-element"">Sleep</div>
+            <div class=""text-element"">Eat</div>
+            <div class=""text-element"">Work</div>
+            <div class=""text-element"">Eat</div>
+            <div class=""text-element"">Sleep</div>
+            <div class=""text-element"">Eat</div>
+            <div class=""text-element"">Work</div>
+            <div class=""text-element"">Eat</div>
+	
+	
+        </div>
+		<p> <span class=""title-text""><span style = color:rgb(255,255,255)>Daily Regime</span></span></p>
+    </div>
+
+    <div class=""controls"">
+        <button class=""control-btn"" onclick=""changeSpeed('slow')"">Boring</button>
+        <button class=""control-btn"" onclick=""changeSpeed('normal')"">Normal</button>
+        <button class=""control-btn"" onclick=""changeSpeed('fast')"">Busy</button>
+        <button class=""control-btn"" onclick=""togglePause()"">Pause/Play</button>
+    </div>
+
+    <script>
+        let isPaused = false;
+        const circle = document.getElementById('spinningCircle');
+        const textElements = circle.querySelectorAll('.text-element');
+
+        function changeSpeed(speed) {
+            circle.classList.remove('slow', 'fast');
+            textElements.forEach(el => el.classList.remove('slow', 'fast'));
+            
+            if (speed === 'slow') {
+                circle.classList.add('slow');
+                textElements.forEach(el => el.classList.add('slow'));
+            } else if (speed === 'fast') {
+                circle.classList.add('fast');
+                textElements.forEach(el => el.classList.add('fast'));
+            }
+        }
+
+        function togglePause() {
+            isPaused = !isPaused;
+            
+            if (isPaused) {
+                circle.classList.add('paused');
+                textElements.forEach(el => el.classList.add('paused'));
+            } else {
+                circle.classList.remove('paused');
+                textElements.forEach(el => el.classList.remove('paused'));
+            }
+        }
+    </script>
+</body>
+</html>"
+"2714688","Exercise 1.3 Starter","style.css","html,
+
+body{
+	
+margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(180deg, #32A5E9, #F89D2A, #051C34);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+		 } 
+				.title-text{
+					  position: absolute;
+            top: 40%;
+            left: 60%;
+            width: 28px;
+            height: 28px;
+						font-family: 'Comic Sans MS';
+            background: radial-gradient(circle, #FFF505, transparent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+          
+
+				}
+
+        .carousel-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            perspective: 1000px;
+        }
+  .spinning-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 425px;
+            height: 425px;
+            animation: spin 9s linear infinite;
+            transform-style: preserve-3d;
+        }
+	 .text-element {
+            position: absolute;
+            color: #00ff89;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+            white-space: nowrap;
+            animation: counterSpin 9s linear infinite;
+        }
+    /* Individual positioning for each text element */
+        .text-element:nth-child(1) { top: 0; left: 50%; transform: translate(-50%, -50%); }
+        .text-element:nth-child(2) { top: 5%; right: 25%; transform: translate(50%, -50%); }
+        .text-element:nth-child(3) { top: 15%; right: 10%; transform: translate(50%, -50%); }
+        .text-element:nth-child(4) { top: 30%; right: 0; transform: translate(50%, -50%); }
+        .text-element:nth-child(5) { top: 45%; right: -5%; transform: translate(50%, -50%); }
+        .text-element:nth-child(6) { top: 60%; right: 0; transform: translate(50%, -50%); }
+        .text-element:nth-child(7) { top: 75%; right: 10%; transform: translate(50%, -50%); }
+        .text-element:nth-child(8) { bottom: 5%; right: 25%; transform: translate(50%, 50%); }
+        .text-element:nth-child(9) { bottom: 0; left: 50%; transform: translate(-50%, 50%); }
+        .text-element:nth-child(10) { bottom: 5%; left: 25%; transform: translate(-50%, 50%); }
+        .text-element:nth-child(11) { top: 75%; left: 10%; transform: translate(-50%, -50%); }
+        .text-element:nth-child(12) { top: 60%; left: 0%; transform: translate(-50%, -50%); }
+        .text-element:nth-child(13) { top: 45%; left: -5%; transform: translate(-50%, -50%); }
+        .text-element:nth-child(14) { top: 30%; left: 0; transform: translate(-50%, -50%); }
+        .text-element:nth-child(15) { top: 15%; left: 10%; transform: translate(-50%, -50%); }
+        .text-element:nth-child(16) { top: 5%; left: 25%; transform: translate(-50%, -50%); }
+
+        /* Spinning animation */
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        /* Counter-spin to keep text readable */
+        @keyframes counterSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(-360deg); }
+        }
+ /* Control buttons */
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+
+        .control-btn {
+            padding: 15px 20px;
+            background: rgba(0, 255, 136, 0.2);
+            border: 4px solid #00ff88;
+            color: #00ff88;
+            font-family: 'Inconsolata';
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        }
+
+        /* Speed variations */
+        .slow { animation-duration: 17s !important; }
+        .fast { animation-duration: 1s !important; }
+        .paused { animation-play-state: paused !important; }
+    </style>
+
+}
+"
+"2709859","Exercise 1.2 Starter","index.html","<!DOCTYPE html>
+<html lang=""en"">
+<head>
+	<meta charset=""utf-8"" />
+<link rel=""stylesheet"" href=""style.css""/>
+</head>
+<body>
+
+	
+	<p class= ""Logo"">
+		<span style=""color:blue;"">G</span>
+		<span style=""color:red;"">O</span>
+		<span style=""color:yellow; "">O</span>
+		<span style=""color:blue;"">G</span>
+		<span style=""color:green;"">L</span>
+		<span style=""color:red;"">E</span>
+		<span style=""color:blue;"">!</span>
+	</p>
+	
+	
+	
+	<input type = 'text' id = 'box' placeholder = 'Search'  onkeyup = 'bigbox();'/>
+        <br><br>
+        <div id=""output""></div>
+	<script>
+	const phrases = [];
+		phrases.push(""I have your house key. if you want it back, give me $28"");
+		phrases.push(""You are stinky and I am going to leak your address"");
+		phrases.push(""Santa is not real"");
+		phrases.push(""I am going to eat you"");
+		phrases.push(""Searching... but I am watching you search"");
+		phrases.push(""I am lowkey in your walls..."");
+		phrases.push(""hey"");
+		phrases.push(""I am behind you"");
+		phrases.push(""you are so cool....i want you"");
+			function bigbox() {
+    let input = document.getElementById(""box"").value.toLowerCase();
+    let output = document.getElementById(""output"");
+   let randomIndex = Math.floor(Math.random() * phrases.length);
+			let randomMessage = phrases[randomIndex];
+			
+			output.textContent = randomMessage;
+		}
+		
+		
+	</script>
+					
+	
+	
+
+</body>
+</html>"
+"2709859","Exercise 1.2 Starter","style.css","html,
+body{
+margin: 0;
+			padding: 0;
+			font-family: ""New Baskerville Bold"";
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			min-height: 100vh;
+			background-color: #fff;
+	
+}
+.logo {
+			font-size: 90px;
+			font-weight: bold;
+			margin-bottom: 30px;
+		}
+.search-container {
+			text-align: center;
+		}
+#box {
+			width: 584px;
+			height: 44px;
+			border: 1px solid #dfe1e5;
+			border-radius: 24px;
+			padding: 0 16px;
+			font-size: 16px;
+			outline: none;
+			box-shadow: 0 2px 5px 1px rgba(64,60,67,.16);
+		}
+#box:hover {
+			box-shadow: 0 2px 8px 1px rgba(64,60,67,.24);
+		}
+		
+		#box:focus {
+			border-color: #4285f4;
+			box-shadow: 0 2px 8px 1px rgba(64,60,67,.24);
+		}
+		
+		#output {
+			margin-top: 20px;
+			text-align: center;
+		}
+"
